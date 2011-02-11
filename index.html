@@ -5,6 +5,6 @@ title: Layout Test Page
 <h1>Header 1</h1>
 <p>
 Some paragraph text.
-{% for post is site.posts %}
+{% for post in site.posts %}
 <p><a href="{{ post.url }}">{{ post.title }}</a>
 {% endfor %}
