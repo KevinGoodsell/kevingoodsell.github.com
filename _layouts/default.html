@@ -1,10 +1,50 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
 
 <html>
-    <head>
-        <title>{{ page.title }}</title>
-    </head>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <link href="css/style.css" rel="stylesheet" type="text/css" media="screen">
+    <title>{{ page.title }}</title>
+</head>
+<body>
+    <div id="logo">
+        <h1><a href="/">Omegacrash</a></h1>
+        <p>Kevin Goodsell's blog
+    </div>
 
-    {{ content }}
+    <hr>
 
+    <div id="header">
+        <div id="menu">
+            <ul>
+                <li><a href="/">Home</a></li>
+                <li><a href="/">Item 2</a></li>
+                <li><a href="/">Item 3</a></li>
+                <li><a href="/">Item 4</a></li>
+            </ul>
+        </div> <!-- menu -->
+    </div> <!-- header -->
+
+    <div id="page">
+        <div id="content">
+        {{ content }}
+        </div> <!-- content -->
+
+        <div id="sidebar">
+            <ul>
+                <li>
+                    <h2>Test Sidebar Item</h2>
+                    <p>Some text to go with the test sidebar item. Some text to
+                    go with the test sidebar item. Some text to go with the
+                    test sidebar item.
+                </li>
+            </ul>
+        </div> <!-- sidebar -->
+    </div> <!-- page -->
+
+    <div id="footer">
+        <p>Copyright 2011 Kevin Goodsell
+        <p>CSS and design based on Conjunction from <a href="http://www.freecsstemplates.org/">Free CSS Templates</a>
+    </div>
+</body>
 </html>
