@@ -110,6 +110,7 @@ hr { display: none; }
 	/*text-transform: lowercase;*/
 	font-size: 13px;
 	color: #F6F9FB;
+	font-style: italic;
 }
 
 #logo h1 {
