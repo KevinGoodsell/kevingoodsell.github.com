@@ -16,7 +16,7 @@ body {
 
 h1, h2, h3 {
 	margin: 0;
-	text-transform: uppercase;
+	/*text-transform: uppercase;*/
 	font-weight: normal;
 	color: #549900;
 }
@@ -100,14 +100,14 @@ hr { display: none; }
 #logo h1, #logo p {
 	margin: 0px;
 	line-height: normal;
-	text-transform: lowercase;
+	/*text-transform: lowercase;*/
 	font-weight: normal;
 	color: #FFFFFF;
 }
 
 #logo p {
-	margin-top: -4px;
-	text-transform: lowercase;
+	/*margin-top: -4px;*/
+	/*text-transform: lowercase;*/
 	font-size: 13px;
 	color: #F6F9FB;
 }
