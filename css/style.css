@@ -230,6 +230,8 @@ hr { display: none; }
 	width: 940px;
 	margin: 0 auto;
 	padding: 20px 20px 0px 20px;
+	/* float-clearing trick: */
+	overflow: auto;
 }
 
 #banner {
