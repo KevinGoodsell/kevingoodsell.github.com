@@ -258,13 +258,13 @@ hr { display: none; }
 	height: 44px;
 	padding: 0px 20px;
 	font-family: Georgia, "Times New Roman", Times, serif;
+	letter-spacing: -1px;
+	text-transform: lowercase;
+	font-size: 30px;
 }
 
 .post .title a {
-	letter-spacing: -1px;
 	text-decoration: none;
-	text-transform: lowercase;
-	font-size: 30px;
 	color: #238EC6;
 }
 
