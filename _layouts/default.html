@@ -43,7 +43,11 @@
                 </li>
                 <li>
                     <h2>Recent Posts</h2>
-                    <p>Not implemented yet.
+                    <ul>
+                    {% for post in site.posts limit:5 offset:1 %}
+                        <li><a href="{{ post.url }}">{{ post.title }}</a>
+                    {% endfor %}
+                    </ul>
                 </li>
                 <li>
                     <!-- logos and stuff go here -->
