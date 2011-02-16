@@ -1,7 +1,6 @@
 ---
 layout: default
 title: Main Page
-tags: [foo, bar, baz]
 ---
 {% for post in site.posts limit:3 %}
 <div class="post">
@@ -21,8 +20,3 @@ tags: [foo, bar, baz]
     {% endfor %}
     </div>
 </div>
-<!--
-{% for tag in page.tags %}
-{{ tag }}
-{% endfor %}
--->
