@@ -1,0 +1,9 @@
+---
+layout: default
+---
+{% for post in site.posts %}
+    {% if post.categories contains tagname %}
+        <!-- tag: {{ tagname }} -->
+        <!-- {{ post.content }} -->
+    {% endif %}
+{% endfor %}
