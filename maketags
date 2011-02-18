@@ -1,0 +1,66 @@
+#!/usr/bin/env python
+
+import sys
+import re
+from glob import glob
+
+_frontmatter_matcher = re.compile(r'---\n(.*?)^---\n', re.MULTILINE | re.DOTALL)
+def get_frontmatter(text):
+    m = _frontmatter_matcher.match(text)
+    return m.group(1) if m else ''
+
+_tags_matcher = re.compile(r'^categories:\s+\[(?P<tags>.*)\]', re.MULTILINE)
+def get_tags(text):
+    frontmatter = get_frontmatter(text)
+    m = _tags_matcher.search(frontmatter)
+    if m is None:
+        return []
+
+    tags = m.group('tags').split(',')
+    tags = [tag.strip().lower() for tag in tags]
+
+    return tags
+
+def make_taglist(tag_counts):
+    # This should return a string of <li> html elements.
+    lines = []
+    for tag in sorted(tag_counts.keys()):
+        count = tag_counts[tag]
+        line = '<li><a href="/nottag/%s.html">%s</a> (%d)\n' % (tag, tag, count)
+        lines.append(line)
+
+    return ''.join(lines)
+
+def make_tag_page(tag):
+    lines = [
+        '---',
+        'layout: tag',
+        'tagname: %s' % tag,
+        '---',
+        '',
+    ]
+    open('nottag/%s.html' % tag, 'w').write('\n'.join(lines))
+
+def main(args=None):
+    if args is None:
+        args = sys.argv[1:]
+
+    tag_counts = {} # { 'tag' : count }
+    for post in glob('_posts/*'):
+        text = open(post).read()
+        tags = get_tags(text)
+        for tag in tags:
+            tag_counts[tag] = tag_counts.get(tag, 0) + 1
+
+    # Generate tag pages
+    for tag in tag_counts.keys():
+        make_tag_page(tag)
+
+    # Generate tag list fragment
+    taglist = make_taglist(tag_counts)
+    open('_includes/taglist.html', 'w').write(taglist)
+
+    return 0
+
+if __name__ == '__main__':
+    sys.exit(main())
