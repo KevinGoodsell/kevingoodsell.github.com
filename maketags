@@ -36,6 +36,7 @@ def make_tag_page(tag):
         '---',
         'layout: tag',
         'tagname: %s' % tag,
+        'title: Posts Tagged with "%s"' % tag,
         '---',
         '',
     ]
