@@ -1,7 +1,7 @@
 <div class="post">
-    <h2 class="title"><a href="{{ page.url }}">{{ page.title }}</a></h2>
-    <p class="meta">{{ page.textdate }}<br>
-    {% for tag in page.categories %}
+    <h2 class="title"><a href="{{ post.url }}">{{ post.title }}</a></h2>
+    <p class="meta">{{ post.textdate }}<br>
+    {% for tag in post.categories %}
         <a href="/tag/{{ tag }}.html">{{ tag }}</a>{% unless forloop.last %},{% endunless %}
     {% endfor %}
     <div class="entry">
