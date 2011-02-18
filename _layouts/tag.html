@@ -1,6 +1,7 @@
 ---
 layout: default
 ---
+{% capture page.title %}Posts Tagged With '{{ page.tagname }}'{% endcapture %}
 {% for post in site.posts %}
     {% if post.categories contains page.tagname %}
         {% include post_head.html %}
