@@ -272,10 +272,10 @@ hr { display: none; }
 }
 
 .post .meta {
-	height: 32px;
+	line-height: 95%;
 	margin-top: -10px;
 	margin-left: 2px;
-	padding: 4px 30px 6px 20px;
+	padding: 4px 30px 20px 20px;
 	background: url(images/img04.jpg) no-repeat left bottom;
 	font-family: Arial, Helvetica, sans-serif;
 	font-weight: normal;

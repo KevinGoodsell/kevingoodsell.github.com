@@ -2,7 +2,7 @@
     <h2 class="title"><a href="{{ post.url }}">{{ post.title }}</a></h2>
     <p class="meta">{{ post.textdate }}<br>
     {% for tag in post.categories %}
-        <a href="/tag/{{ tag }}.html">{{ tag }}</a>{% unless forloop.last %},{% endunless %}
+        Tags: <a href="/tag/{{ tag }}.html">{{ tag }}</a>{% unless forloop.last %},{% endunless %}
     {% endfor %}
     <div class="entry">
     <!-- beginning of content -->
