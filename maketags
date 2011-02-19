@@ -26,7 +26,7 @@ def make_taglist(tag_counts):
     lines = []
     for tag in sorted(tag_counts.keys()):
         count = tag_counts[tag]
-        line = '<li><a href="/nottag/%s.html">%s</a> (%d)\n' % (tag, tag, count)
+        line = '<li><a href="/tag/%s.html">%s</a> (%d)\n' % (tag, tag, count)
         lines.append(line)
 
     return ''.join(lines)
@@ -40,7 +40,7 @@ def make_tag_page(tag):
         '---',
         '',
     ]
-    open('nottag/%s.html' % tag, 'w').write('\n'.join(lines))
+    open('tag/%s.html' % tag, 'w').write('\n'.join(lines))
 
 def main(args=None):
     if args is None:

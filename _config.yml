@@ -1,2 +1,2 @@
 permalink: /:year-:month-:day/:title.html
-exclude: maketags, taglist.html
+exclude: [maketags]
