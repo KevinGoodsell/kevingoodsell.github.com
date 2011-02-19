@@ -2,6 +2,7 @@
 
 import sys
 import re
+import os
 from glob import glob
 
 _frontmatter_matcher = re.compile(r'---\n(.*?)^---\n', re.MULTILINE | re.DOTALL)
@@ -42,6 +43,10 @@ def make_tag_page(tag):
     ]
     open('tag/%s.html' % tag, 'w').write('\n'.join(lines))
 
+def delete_tag_pages():
+    for page in glob('tag/*.html'):
+        os.remove(page)
+
 def main(args=None):
     if args is None:
         args = sys.argv[1:]
@@ -54,6 +59,7 @@ def main(args=None):
             tag_counts[tag] = tag_counts.get(tag, 0) + 1
 
     # Generate tag pages
+    delete_tag_pages()
     for tag in tag_counts.keys():
         make_tag_page(tag)
 
