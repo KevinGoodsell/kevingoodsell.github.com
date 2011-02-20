@@ -3,11 +3,28 @@
 <html>
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-    <!-- <meta http-equiv="Refresh" content="1; URL=/four-oh-four.html"> -->
     <title>Page Not Found - Omegacrash</title>
+
+    <script type="text/javascript">
+    <!--
+    function replace() {
+        if (!window.XMLHttpRequest)
+            return;
+
+        var req = new XMLHttpRequest();
+        req.open("GET", '/four-oh-four.html', false);
+        req.send(null);
+
+        var replacement = req.responseText;
+
+        document.open();
+        document.write(replacement);
+        document.close();
+    }
+    // -->
+    </script>
 </head>
-<body>
-    <!-- Is liquid really not supported? {% comment %}Yes, apparently it's not.{% endcomment %} -->
+<body onload="replace()">
     <h1>Oops.</h1>
     <p>The page you requested wasn't found, and you got this boring 404 page
     instead. Forwarding to the <a href="/four-oh-four.html">slightly fancier
