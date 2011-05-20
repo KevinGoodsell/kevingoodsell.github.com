@@ -1,0 +1,5 @@
+#!/bin/sh
+
+set -e
+
+wget -O 404.html http://kevingoodsell.github.com/four-oh-four.html

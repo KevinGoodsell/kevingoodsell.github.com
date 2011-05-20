@@ -3,38 +3,100 @@
 <html>
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <link href="/css/style.css" rel="stylesheet" type="text/css" media="screen">
     <title>Page Not Found - Omegacrash</title>
-
-    <script type="text/javascript">
-    <!--
-    /*
-    Since GitHub Pages only allows HTML for the 404 page, try to replace the
-    page with a generated page that matches the rest of the site. Kind of a
-    hack, but it looks nice when it works and if it doesn't work there's still
-    a fallback page. It's just ugly.
-    */
-    function replace() {
-        if (!window.XMLHttpRequest)
-            return;
-
-        var req = new XMLHttpRequest();
-        req.open("GET", '/four-oh-four.html', false);
-        req.send(null);
-
-        var replacement = req.responseText;
-
-        document.open();
-        document.write(replacement);
-        document.close();
-    }
-    // -->
-    </script>
 </head>
-<body onload="replace()">
-    <h1>Oops.</h1>
-    <p>The page you requested wasn't found, and you got this boring 404 page
-    instead. Forwarding to the <a href="/four-oh-four.html">slightly fancier
-    error page</a> also didn't work. Sorry about that.
-    <p>Your best bet now is to go <a href="/">home</a>.
+<body>
+    <div id="logo">
+        <h1><a href="/">Omegacrash</a></h1>
+        <p>Kevin Goodsell's blog
+    </div>
+
+    <hr>
+
+    <div id="header">
+        <div id="menu">
+            <ul>
+                <li><a href="/">Home</a></li>
+                <li><a href="/about.html" title="About me">About</a></li>
+                <li><a href="https://github.com/KevinGoodsell" title="My GitHub projects">GitHub</a></li>
+            </ul>
+        </div> <!-- menu -->
+    </div> <!-- header -->
+
+    <div id="page">
+        <div id="content">
+        <div class="post">
+    <h2 class="title">Page Not Found</h2>
+    <p class="meta">
+    <div class="entry">
+        <p>
+        Sorry, the page you requested was not found.
+    </div>
+</div>
+
+        </div> <!-- content -->
+
+        <div id="sidebar">
+            <ul>
+                <li>
+                    <h2>About</h2>
+                    <p>My name in Kevin Goodsell. I am a software engineer in
+                    Seattle, WA. This is my blog about programming, technology,
+                    and free software.
+                </li>
+                <li>
+                    <h2>Tags</h2>
+                    <ul>
+                    <li><a href="/tag/post.html">post</a> (1)
+<li><a href="/tag/test.html">test</a> (1)
+
+                    </ul>
+                </li>
+                <li>
+                    <h2>Recent Posts</h2>
+                    <ul>
+                    
+                        <li><a href="/2011-02-11/test-post.html">Test Post</a>
+                    
+                    </ul>
+                </li>
+                <li>
+                    <!-- logos and stuff go here -->
+                    <p>
+                    <a rel="license" href="http://creativecommons.org/licenses/by-sa/3.0/">
+                        <img class="par" alt="Creative Commons License" src="http://i.creativecommons.org/l/by-sa/3.0/88x31.png">
+                    </a>
+                    Unless otherwise noted, posts on this blog are licensed
+                    under a
+                    <a rel="license" href="http://creativecommons.org/licenses/by-sa/3.0/">
+                    Creative Commons Attribution-ShareAlike 3.0 Unported
+                    License</a>. Attributions should include my name (Kevin
+                    Goodsell) and the URL of the post (optionally in the form of
+                    a link for documents that support hypertext).
+
+                    <p>
+                    <a href="http://validator.w3.org/check?uri=referer">
+                        <img class="par" src="http://www.w3.org/Icons/valid-html401" alt="Valid HTML 4.01 Strict" height="31" width="88">
+                    </a>
+                    All the HTML on this site should be valid and
+                    standards-conforming (though mistakes might slip in). This
+                    link provides a quick check.
+
+                    <p>
+                    <a href="http://jigsaw.w3.org/css-validator/check/referer">
+                        <img class="par" src="http://jigsaw.w3.org/css-validator/images/vcss" alt="Valid CSS!">
+                    </a>
+                    Likewise, all the CSS on this site is valid and
+                    standards-conforming.
+                </li>
+            </ul>
+        </div> <!-- sidebar -->
+    </div> <!-- page -->
+
+    <div id="footer">
+        <p>Copyright 2011 Kevin Goodsell.
+        <br>CSS and design based on Conjunction from <a href="http://www.freecsstemplates.org/">Free CSS Templates</a>.
+    </div>
 </body>
 </html>
