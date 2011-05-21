@@ -1,0 +1,22 @@
+#!/bin/sh
+
+set -e
+set -C
+
+[ -n "$1" ] || { echo Missing title; exit 1; }
+
+dropchars="!\"#\$%&'()*+,./:;<=>?@[\\]^\`{|}~"
+
+textdate=`date "+%A, %B %-d, %Y"`
+texttitle=$1
+filedate=`date "+%Y-%m-%d"`
+filetitle=`echo "$texttitle" | tr -d "$dropchars" | tr "A-Z " a-z-`
+
+cat > _posts/$filedate-$filetitle.html <<EOF
+---
+layout: post
+title: $texttitle
+textdate: $textdate
+categories: []
+---
+EOF
