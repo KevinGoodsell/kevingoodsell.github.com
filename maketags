@@ -22,12 +22,16 @@ def get_tags(text):
 
     return tags
 
+def tag_file_name(tag):
+    return tag.replace(' ', '-')
+
 def make_taglist(tag_counts):
     # This should return a string of <li> html elements.
     lines = []
     for tag in sorted(tag_counts.keys()):
         count = tag_counts[tag]
-        line = '<li><a href="/tag/%s.html">%s</a> (%d)\n' % (tag, tag, count)
+        line = '<li><a href="/tag/%s.html">%s</a> (%d)\n' % (tag_file_name(tag),
+                                                             tag, count)
         lines.append(line)
 
     return ''.join(lines)
@@ -41,7 +45,7 @@ def make_tag_page(tag):
         '---',
         '',
     ]
-    open('tag/%s.html' % tag, 'w').write('\n'.join(lines))
+    open('tag/%s.html' % tag_file_name(tag), 'w').write('\n'.join(lines))
 
 def delete_tag_pages():
     for page in glob('tag/*.html'):
