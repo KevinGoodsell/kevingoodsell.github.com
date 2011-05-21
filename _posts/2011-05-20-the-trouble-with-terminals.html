@@ -51,13 +51,13 @@ terminal, and it only knows *which* terminal by checking the $TERM
 environment variable. You can find out what terminfo thinks about your
 terminal with the command "infocmp":
 
-<pre>
-    $ infocmp
-    # Reconstructed via infocmp from file: /lib/terminfo/x/xterm
-    xterm|X11 terminal emulator,
-            am, bce, km, mc5i, mir, msgr, npc, xenl,
-            colors#8, cols#80, it#8, lines#24, pairs#64,
-            ...
+<pre class="code">
+$ infocmp
+# Reconstructed via infocmp from file: /lib/terminfo/x/xterm
+xterm|X11 terminal emulator,
+        am, bce, km, mc5i, mir, msgr, npc, xenl,
+        colors#8, cols#80, it#8, lines#24, pairs#64,
+        ...
 </pre>
 
 <p>You can see immediately that "colors" is set to 8, so that explains the
@@ -65,9 +65,9 @@ problem in Vim. You can also see that terminfo thinks that GNOME
 Terminal is actually xterm. The reason for that is the $TERM environment
 variable:
 
-<pre>
-    $ echo $TERM
-    xterm
+<pre class="code">
+$ echo $TERM
+xterm
 </pre>
 
 <p>$TERM is set to "xterm" by GNOME Terminal -- always, unconditionally.
@@ -79,10 +79,10 @@ the terminal starts. You can do this in your shell initialization script
 will be wrong for any other terminal you use. Here's a somewhat
 reasonable attempt:
 
-<pre>
-    if [ "$TERM" = xterm -a "$COLORTERM" = "gnome-terminal" ]; then
-        TERM=gnome-256color
-    fi
+<pre class="code">
+if [ "$TERM" = xterm -a "$COLORTERM" = "gnome-terminal" ]; then
+    TERM=gnome-256color
+fi
 </pre>
 
 <p>Since GNOME Terminal also sets $COLORTERM as shown, that can be used to
@@ -104,8 +104,8 @@ using a different $TERM this cheat stops working. You need to tell Vim
 about your terminal's mouse support. This is done with Vim's ttymouse
 setting, so you can simply add the following to your .vimrc:
 
-<pre>
-    set ttymouse=xterm2
+<pre class="code">
+set ttymouse=xterm2
 </pre>
 
 <h3>3. Terminfo</h3>
@@ -123,11 +123,11 @@ terminfo file and compile it with the tic command. This is actually
 pretty easy to do once you have the terminal codes. Here's a possible
 terminfo file:
 
-<pre>
-    gnome-256color|GNOME Terminal with xterm 256-colors,
-    # Set up "status line", which is actually the window title.
-            hs, wsl#60, dsl=\E]2;\007, tsl=\E]2;, fsl=\007,
-            use=gnome-256color,
+<pre class="code">
+gnome-256color|GNOME Terminal with xterm 256-colors,
+# Set up "status line", which is actually the window title.
+        hs, wsl#60, dsl=\E]2;\007, tsl=\E]2;, fsl=\007,
+        use=gnome-256color,
 </pre>
 
 <p>Don't leave off the final comma, or the file won't work. This adds
@@ -143,8 +143,8 @@ terminfo(5).
 
 <p>Once you've saved this file, you can compile it with tic this way:
 
-<pre>
-    $ tic term.ti
+<pre class="code">
+$ tic term.ti
 </pre>
 
 <p>That should be all you need. The compiled file is automatically placed
@@ -168,8 +168,8 @@ feature of some terminals. This mode is started with the smcup terminfo
 string and ended with rmcup<sup><a href="#footnote3">3</a></sup>. By using
 infocmp you can see what rmcup does:
 
-<pre>
-    rmcup=\E[2J\E[?47l\E8
+<pre class="code">
+rmcup=\E[2J\E[?47l\E8
 </pre>
 
 <p>These terminal control codes can be interpreted with a little
@@ -185,13 +185,13 @@ background color. If we can restore the default background color first,
 we should get better results. Fortunately there's a code for this:
 \E[49m. Open your terminfo file again and add a new rmcup:
 
-<pre>
-    gnome-256color|GNOME Terminal with xterm 256-colors,
-    # Set up "status line", which is actually the window title.
-            hs, wsl#60, dsl=\E]2;\007, tsl=\E]2;, fsl=\007,
-    # Reset the background color before clearing the alt screen buffer:
-            rmcup=\E[49m\E[2J\E[?47l\E8,
-            use=gnome-256color,
+<pre class="code">
+gnome-256color|GNOME Terminal with xterm 256-colors,
+# Set up "status line", which is actually the window title.
+        hs, wsl#60, dsl=\E]2;\007, tsl=\E]2;, fsl=\007,
+# Reset the background color before clearing the alt screen buffer:
+        rmcup=\E[49m\E[2J\E[?47l\E8,
+        use=gnome-256color,
 </pre>
 
 <p>Compile it with tic as before and the background problem should be
@@ -207,13 +207,13 @@ under Screen. Time to start from scratch.
 
 <p>As before, infocmp will show us why we're back at 8 colors:
 
-<pre>
-    $ infocmp
-    #       Reconstructed via infocmp from file: /lib/terminfo/s/screen
-    screen|VT 100/ANSI X3.64 virtual terminal,
-            am, km, mir, msgr, xenl,
-            colors#8, cols#80, it#8, lines#24, pairs#64,
-            ...
+<pre class="code">
+$ infocmp
+#       Reconstructed via infocmp from file: /lib/terminfo/s/screen
+screen|VT 100/ANSI X3.64 virtual terminal,
+        am, km, mir, msgr, xenl,
+        colors#8, cols#80, it#8, lines#24, pairs#64,
+        ...
 </pre>
 
 <p>There's nothing obviously wrong with $TERM, but the number of colors in
@@ -221,11 +221,11 @@ this terminfo entry is only 8. Since Screen is running on a 256 color
 terminal, it should be able to support 256. Fortunately there is a
 256-color terminfo entry for Screen. In fact, there are four:
 
-<pre>
-    screen-256color
-    screen-256color-s
-    screen-256color-bce
-    screen-256color-bce-s
+<pre class="code">
+screen-256color
+screen-256color-s
+screen-256color-bce
+screen-256color-bce-s
 </pre>
 
 <p>The -s variants include the status line capabilities tsl, fsl, and dsl,
@@ -245,9 +245,9 @@ for now, our immediate goal is to make 256 colors work again. Since bce
 is nice to have, and it's supported in GNOME Terminal, we'll use
 screen-256color-bce by putting the following in ~/.screenrc:
 
-<pre>
-    term screen-256color-bce
-    defbce on
+<pre class="code">
+term screen-256color-bce
+defbce on
 </pre>
 
 <p>After restarting screen, you should be back to 256 colors.
@@ -260,8 +260,8 @@ for it. Just like Vim needs you to explicitly set ttymouse, Screen needs
 you to tell it that special xterm codes are supported. This is done in
 the .screenrc file with a line like this:
 
-<pre>
-    termcapinfo gnome* XT
+<pre class="code">
+termcapinfo gnome* XT
 </pre>
 
 <p>XT is a custom termcap/terminfo capability that Screen recognizes.
@@ -274,20 +274,20 @@ working again.
 the process for Screen. The latest iteration of our terminfo file looks
 like this:
 
-<pre>
-    status-addon|Extra attributes for window title as status line,
-    # Set up "status line", which is actually the window title.
-            hs, wsl#60, dsl=\E]2;\007, tsl=\E]2;, fsl=\007,
+<pre class="code">
+status-addon|Extra attributes for window title as status line,
+# Set up "status line", which is actually the window title.
+        hs, wsl#60, dsl=\E]2;\007, tsl=\E]2;, fsl=\007,
 
-    gnome-256color|GNOME Terminal with xterm 256-colors,
-    # Reset the background color before clearing the alt screen buffer:
-            rmcup=\E[49m\E[2J\E[?47l\E8,
-            use=status-addon,
-            use=gnome-256color,
+gnome-256color|GNOME Terminal with xterm 256-colors,
+# Reset the background color before clearing the alt screen buffer:
+        rmcup=\E[49m\E[2J\E[?47l\E8,
+        use=status-addon,
+        use=gnome-256color,
 
-    screen-256color-bce|GNU Screen with 256 colors and BCE,
-            use=status-addon,
-            use=screen-256color-bce,
+screen-256color-bce|GNU Screen with 256 colors and BCE,
+        use=status-addon,
+        use=screen-256color-bce,
 </pre>
 
 <p>Compile it with tic and the window title should work again.
@@ -303,8 +303,8 @@ get cleared completely when exiting Vim. This is similar to what we've
 already seen, and can be fixed in a similar way. For Screen, the
 terminfo capability rmcup looks like this:
 
-<pre>
-    rmcup=\E[?1049l
+<pre class="code">
+rmcup=\E[?1049l
 </pre>
 
 <p>That is just one control sequence, and it tells Screen to switch to the
@@ -315,23 +315,23 @@ the non-altscreen case. To completely fix it we'll need to clear the
 line as well, with the code \E[2K. So, our terminfo file now looks like
 this:
 
-<pre>
-    status-addon|Extra attributes for window title as status line,
-    # Set up "status line", which is actually the window title.
-            hs, wsl#60, dsl=\E]2;\007, tsl=\E]2;, fsl=\007,
+<pre class="code">
+status-addon|Extra attributes for window title as status line,
+# Set up "status line", which is actually the window title.
+        hs, wsl#60, dsl=\E]2;\007, tsl=\E]2;, fsl=\007,
 
-    gnome-256color|GNOME Terminal with xterm 256-colors,
-    # Reset the background color before clearing the alt screen buffer:
-            rmcup=\E[49m\E[2J\E[?47l\E8,
-            use=status-addon,
-            use=gnome-256color,
+gnome-256color|GNOME Terminal with xterm 256-colors,
+# Reset the background color before clearing the alt screen buffer:
+        rmcup=\E[49m\E[2J\E[?47l\E8,
+        use=status-addon,
+        use=gnome-256color,
 
-    screen-256color-bce|GNU Screen with 256 colors and BCE,
-    # Reset the background color and clear the line before leaving alt
-    # screen buffer:
-            rmcup=\E[49m\E[2K\E[?1049l,
-            use=status-addon,
-            use=screen-256color-bce,
+screen-256color-bce|GNU Screen with 256 colors and BCE,
+# Reset the background color and clear the line before leaving alt
+# screen buffer:
+        rmcup=\E[49m\E[2K\E[?1049l,
+        use=status-addon,
+        use=screen-256color-bce,
 </pre>
 
 <p>Once you've compiled this with tic and restarted Screen you should
@@ -351,27 +351,27 @@ running under different terminal types the same way we created them
 before. Here's a possible terminfo file with terminal definitions for
 Screen on top of GNOME Terminal and the Linux console:
 
-<pre>
-    status-addon|Extra attributes for window title as status line,
-    # Set up "status line", which is actually the window title.
-            hs, wsl#60, dsl=\E]2;\007, tsl=\E]2;, fsl=\007,
+<pre class="code">
+status-addon|Extra attributes for window title as status line,
+# Set up "status line", which is actually the window title.
+        hs, wsl#60, dsl=\E]2;\007, tsl=\E]2;, fsl=\007,
 
-    gnome-256color|GNOME Terminal with xterm 256-colors,
-    # Reset the background color before clearing the alt screen buffer:
-            rmcup=\E[49m\E[2J\E[?47l\E8,
-            use=status-addon,
-            use=gnome-256color,
+gnome-256color|GNOME Terminal with xterm 256-colors,
+# Reset the background color before clearing the alt screen buffer:
+        rmcup=\E[49m\E[2J\E[?47l\E8,
+        use=status-addon,
+        use=gnome-256color,
 
-    screen.gnome-256color|GNU Screen on GNOME Terminal,
-    # Reset the background color and clear the line before leaving alt
-    # screen buffer:
-            rmcup=\E[49m\E[2K\E[?1049l,
-            use=status-addon,
-            use=screen-256color-bce,
+screen.gnome-256color|GNU Screen on GNOME Terminal,
+# Reset the background color and clear the line before leaving alt
+# screen buffer:
+        rmcup=\E[49m\E[2K\E[?1049l,
+        use=status-addon,
+        use=screen-256color-bce,
 
-    screen.linux|GNU Screen on Linux Console,
-            rmcup=\E[49m\E[2K\E[?1049l,
-            use=screen-bce,
+screen.linux|GNU Screen on Linux Console,
+        rmcup=\E[49m\E[2K\E[?1049l,
+        use=screen-bce,
 </pre>
 
 <h3>A.2 Separate Screenrcs</h3>
@@ -383,10 +383,10 @@ one. The simplest way to do this is probably to conditionally set the
 $SCREENRC environment variable in your shell startup script. Here's an
 example:
 
-<pre>
-    if [ -f ~/.screenrc.$TERM ]; then
-        export SCREENRC=~/.screenrc.$TERM
-    fi
+<pre class="code">
+if [ -f ~/.screenrc.$TERM ]; then
+    export SCREENRC=~/.screenrc.$TERM
+fi
 </pre>
 
 <p>This will automatically select a file named .screenrc.gnome-256color in
@@ -400,15 +400,15 @@ the $TERM-specific files to include those options.
 <p>The default .bashrc file on Debian and Ubuntu contains something like
 this:
 
-<pre>
-    # If this is an xterm set the title to user@host:dir
-    case "$TERM" in
-    xterm*|rxvt*)
-        PS1="\[\e]0;${debian_chroot:+($debian_chroot)}\u@\h: \w\a\]$PS1"
-        ;;
-    *)
-        ;;
-    esac
+<pre class="code">
+# If this is an xterm set the title to user@host:dir
+case "$TERM" in
+xterm*|rxvt*)
+    PS1="\[\e]0;${debian_chroot:+($debian_chroot)}\u@\h: \w\a\]$PS1"
+    ;;
+*)
+    ;;
+esac
 </pre>
 
 <p>This adds a prefix to the shell prompt which includes xterm escape codes
@@ -424,10 +424,10 @@ codes. The whole reason for the existence of termcap and terminfo is so
 that applications can use terminals without worrying about details like
 this. Here's an alternate approach:
 
-<pre>
-    if tput hs; then
-        PS1="\[$(tput tsl)\${debian_chroot:+(\$debian_chroot)}\u@\h: \w$(tput fsl)\]$PS1"
-    fi
+<pre class="code">
+if tput hs; then
+    PS1="\[$(tput tsl)\${debian_chroot:+(\$debian_chroot)}\u@\h: \w$(tput fsl)\]$PS1"
+fi
 </pre>
 
 <p>This checks for the hs capability, and uses the tsl and fsl capabilities
@@ -458,7 +458,7 @@ used to reset it.
 can be found here:
 
 <pre>
-    <a href="http://invisible-island.net/xterm/ctlseqs/ctlseqs.html">http://invisible-island.net/xterm/ctlseqs/ctlseqs.html</a>
+<a href="http://invisible-island.net/xterm/ctlseqs/ctlseqs.html">http://invisible-island.net/xterm/ctlseqs/ctlseqs.html</a>
 </pre>
 
 <p>Many terminals (including GNOME Terminal and Screen) support a subset of

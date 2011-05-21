@@ -67,6 +67,19 @@ img.par-alt {
 
 hr { display: none; }
 
+pre {
+	font-size: 11px;
+	overflow: auto;
+}
+
+pre.code {
+	background-color: #EEEEEE;
+	border: 2px solid #CCD8C0;
+	padding: 6px;
+	margin-left: 20px;
+	margin-right: 20px;
+}
+
 .list1 {
 }
 
