@@ -25,11 +25,11 @@ h1 { font-size: 44px; }
 
 h2 { font-size: 18px; }
 
-h3 { }
+h3 { font-size: 15px; }
 
 p, ul, ol {
 	margin-top: 0;
-	line-height: 240%;
+	line-height: 220%;
 	text-align: justify;
 }
 
@@ -57,12 +57,12 @@ img.right {
 
 img.par {
 	float: left;
-	margin: 5px 10px 10px 0px;
+	margin: 10px 10px 0 0;
 }
 
 img.par-alt {
 	float: right;
-	margin: 5px 0px 10px 10px;
+	margin: 10px 0 0 10px;
 }
 
 hr { display: none; }
@@ -387,7 +387,7 @@ pre.code {
 }
 
 #sidebar p {
-	margin: 0;
+	margin: 10px 0;
 	padding: 0px 14px;
 }
 
