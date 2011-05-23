@@ -1,0 +1,138 @@
+---
+layout: post
+title: Diagnosable Software Failures
+textdate: Monday, May 23, 2011
+categories: [troubleshooting, quality, python, ImportError]
+---
+<p>It's hard to overstate the importance of making software failures
+diagnosable. Easily diagnosable failures allow users to discover the underlying
+problem themselves, and get to a resolution much more easily. Difficult to
+diagnose failures result in support requests that take forever to resolve, a lot
+of back-and-forth while attempting to narrow down the cause, and massive
+frustration on both sides. Often they result in the sort of bug report that sits
+in the bug tracking system month after month waiting for a reliable way to
+reproduce the problem or a recurrence from which more information can be
+gathered.
+
+<p>Ideally failures should be diagnosed clearly and immediately, in a way that
+allows the user to understand what he or she needs to do. Somewhat less
+desirable are diagnostics that can be obtained from log files, by turning on
+special options, or by using special tools. The worst case is the lack of any
+useful diagnostic information, perhaps requiring a developer to examine the
+source code for clues, run under a debugger, etc.
+
+<p>There's something to be said for recognizing when certain classes of problems
+tend to be difficult to diagnose, and finding ways to make them easier. Yes it's
+a reactive approach, and not ideal, but we have to deal with the realities of
+software development and support.
+
+<h3>Python ImportErrors</h3>
+
+<p>Anybody who has used Python at all is familiar with this error:
+
+<pre class="code">
+ImportError: No module named foo
+</pre>
+
+<p>This is usually no more than a minor hassle for a Python developer, but for a
+non-developer using a Python application it's a complete dead-end. The error
+could be in Sanskrit for all the good it does an end-user. Unfortunately, the
+nature of Python applications ensures this error will sometimes pop up -- any
+application that grows beyond a single file will need to import its other parts,
+and where Python searches for additional modules to import is often unclear.
+
+<p>As an example, consider a message that was posted on the mailing list for the
+Python application <a href="http://tmda.net/">TMDA</a>, which included this
+error (and little else):
+
+<pre class="code">
+ImportError: No module named TMDA
+</pre>
+
+<p>In a follow-up message the user also included the installation path for the
+TMDA package: <tt>/usr/local/lib/python2.6/site-packages/TMDA</tt>.
+
+<p>We can infer therefore that <tt>/usr/local/lib/python2.6/site-packages</tt>
+is not in Python's <tt>sys.path</tt>, but why isn't it? How can we instruct the
+user to diagnose this problem?
+
+<h3>Module Hide-and-Seek</h3>
+
+<p>The first thing I did was look up how site package directories are added to
+the module path. They are supposed to be added on interpreter startup by the
+<tt>site.py</tt> module, but paths that don't exist are not included. This is
+unfortunate from a troubleshooting perspective: if the paths were included it
+would be a simple matter to check where a particular Python installation expects
+modules to be located.
+
+<p>The site module constructs paths to check by combining the values of
+<tt>sys.prefix</tt> and <tt>sys.exec_prefix</tt> (the values of which are
+determined at configuration-time) with some platform-specific trailing paths --
+in this case the relevant one being <tt>lib/pythonX.Y/site-packages</tt>, where
+X.Y is the Python version. Since I knew that
+<tt>/usr/local/lib/python2.6/site-packages</tt> existed, I concluded that
+<tt>/usr/local</tt> must not be one of the prefix values. I asked the user to
+check these values, and suggested a fix based on my conclusion.
+
+<p>Unfortunately my conclusion was wrong. <tt>sys.prefix</tt> actually was
+<tt>/usr/local</tt>, as was <tt>sys.exec_prefix</tt>. I was on the right track,
+but took a wrong turn when I assumed the prefix was the problem. It was actually
+the trailing portion of the path that had an unexpected value: rather than
+<tt>lib/python2.6/site-packages</tt>, it was
+<tt>lib/python2.7/site-packages</tt>. The user had multiple Python versions
+installed and was running 2.7, not 2.6.
+
+<h3>A Better Way</h3>
+
+<p>When diagnosing import issues, it would be a significant improvement if we
+could list not just the module search paths (which is easy), but the potential
+module search paths, including those paths that were excluded from the final
+module paths (typically because the path doesn't exist). The <tt>site.py</tt>
+module can be run as a script to print out the final paths as well as some
+potentially useful information about user-specified module paths. It could have
+been written to also report the excluded paths, but sadly it wasn't. It also
+doesn't offer much in the way of hooks to retrieve more information, but here's
+one way to list the paths that it failed to find:
+
+<pre class="code">
+#!/usr/bin/env python
+
+import site
+import os
+
+original_isdir = os.path.isdir
+missed_dirs = set()
+def isdir(path):
+    if original_isdir(path):
+        return True
+    else:
+        missed_dirs.add(path)
+        return False
+
+os.path.isdir = isdir
+
+try:
+    site._script()
+finally:
+    print "Possibly skipped paths:"
+    print '\n'.join(missed_dirs)
+</pre>
+
+<pre class="code">
+$ ./show-import-dirs
+sys.path = [
+    '/home/kevin/test',
+    '/usr/lib/python2.6',
+    '/usr/lib/python2.6/plat-linux2',
+    '/usr/lib/python2.6/lib-tk',
+    '/usr/lib/python2.6/lib-old',
+    '/usr/lib/python2.6/lib-dynload',
+    '/usr/local/lib/python2.6/dist-packages',
+    '/usr/lib/python2.6/dist-packages',
+]
+USER_BASE: '/home/kevin/.local' (exists)
+USER_SITE: '/home/kevin/.local/lib/python2.6/site-packages' (doesn't exist)
+ENABLE_USER_SITE: True
+Possibly skipped paths:
+/home/kevin/.local/lib/python2.6/site-packages
+</pre>
