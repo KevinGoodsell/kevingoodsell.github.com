@@ -344,6 +344,10 @@ pre.code {
 	color: #FFFFFF;
 }
 
+.post tt {
+	background-color: #E8E8EE;
+}
+
 /* Sidebar */
 
 #sidebar {
