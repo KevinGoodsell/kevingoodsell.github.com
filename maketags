@@ -18,17 +18,19 @@ def get_tags(text):
         return []
 
     tags = m.group('tags').split(',')
-    tags = [tag.strip().lower() for tag in tags]
+    tags = [tag.strip() for tag in tags]
 
     return tags
 
 def tag_file_name(tag):
-    return tag.replace(' ', '-')
+    # Whatever happens here has to also happen in the post header fragment in
+    # order for the links in the post to go to the same place.
+    return tag.lower().replace(' ', '-')
 
 def make_taglist(tag_counts):
     # This should return a string of <li> html elements.
     lines = []
-    for tag in sorted(tag_counts.keys()):
+    for tag in sorted(tag_counts.keys(), key=str.lower):
         count = tag_counts[tag]
         line = '<li><a href="/tag/%s.html">%s</a> (%d)\n' % (tag_file_name(tag),
                                                              tag, count)
@@ -45,7 +47,10 @@ def make_tag_page(tag):
         '---',
         '',
     ]
-    open('tag/%s.html' % tag_file_name(tag), 'w').write('\n'.join(lines))
+    filename = 'tag/%s.html' % tag_file_name(tag)
+    if os.path.exists(filename):
+        raise RuntimeError('File already exists (for tag %s)' % tag)
+    open(filename, 'w').write('\n'.join(lines))
 
 def delete_tag_pages():
     for page in glob('tag/*.html'):
