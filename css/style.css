@@ -38,7 +38,15 @@ p, ul, ol {
 
 ul, ol { }
 
-blockquote { }
+blockquote {
+	border-top: solid #DDDDDD 3px;
+	border-bottom: solid #DDDDDD 3px;
+	padding-top: 1.2ex;
+}
+
+blockquote p {
+	line-height: 120%;
+}
 
 a { color: #729920; }
 
