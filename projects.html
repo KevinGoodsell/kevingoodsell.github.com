@@ -1,0 +1,94 @@
+---
+layout: default
+title: My Projects
+---
+<div class="post">
+    <h2 class="title">My Projects</h2>
+    <div class="entry">
+        <p>This is a brief description of some of my projects with links to the
+        source code where applicable.
+
+        <h3>Tagged Message Delivery Agent</h3>
+
+        <p><a href="http://tmda.net/">Tagged Message Delivery Agent</a> is an
+        email filtering and spam-prevention system. I originally forked this
+        project because it had been idle for a few years and I wasn't happy with
+        its SSL/TLS support, and because it had some problems with newer
+        versions of Python. After making several updates and releasing a few new
+        versions, the original author made me an official maintainer for the
+        project. The main code is repository is on SourceForge, but my Git
+        repository can be found
+        <a href="https://github.com/KevinGoodsell/tmda-fork">here</a>. The work
+        I've done on the project includes:
+
+        <ul>
+            <li>Updates for modern Python versions
+            <li>Adding support for OpenSSL
+            <li>Adding support for PAM authentication
+            <li>Adding tests
+            <li>Creating a new documentation generating tool
+            <li>Adding UNIX man pages
+            <li>Adding support for IPv6
+            <li>Adding packaging for Debian/Ubuntu</li>
+        </ul>
+
+        <h3>Mork Converter</h3>
+
+        <p><a href="https://github.com/KevinGoodsell/mork-converter">mork-converrter</a>
+        is an application I wrote to convert Mozilla Mork files to more useful
+        formats. A handful of simple tools are available to convert certain
+        types of Mork files, but this is the only application other than Mozilla
+        that attempts to properly parse and process all Mork files, making it
+        the only reliable way to extract data from these files. It uses an
+        extensible architecture for providing output formats, with XML and CVS
+        support currently available. It handles text data encoded in many
+        different ways, producing UTF-8 output by default, though other
+        encodings are available. It also interprets many of the fields found in
+        Mork files to present things like dates and times, as well as many
+        application-specific flags, in a readable format.
+
+        <h3>Rsync Backup</h3>
+
+        <p><a href="https://github.com/KevinGoodsell/rsync-backup">rsync-backup</a>
+        is a simple but powerful script for performing backups using rsync to do
+        the heavy lifting. It creates backups that are simply a directory with
+        subdirectories and files, mirroring the original source. Files can be
+        restored by simply copying them, and earlier versions can be examined
+        without any extra tools. Disk space is conserved by hard-linking files
+        that have not been modified since the previous backup. Because it uses
+        rsync, backups can be performed to a local disk or a remote location
+        using rsync's highly-optimized data transfer algorithms. Also supports
+        validating backups, extensive logging, flexible include/exclude
+        patterns, and dry-run execution for testing.
+
+        <h3>Vim Plugins</h3>
+
+        <p>I've written several small plugins for Vim, several of which are
+        collected <a href="https://github.com/KevinGoodsell/vim-scripts">here</a>.
+        The README file describes each plugin, but briefly they include plugins
+        to:
+
+        <ul>
+            <li>Detect the indentation scheme used in a file, and set options
+            accordingly
+            <li>Display side-by-side differences between the current file and an
+            earlier revision in source control
+            <li>Toggle between editing text and binary using a hex-editing mode
+            <li>Securely edit files encrypted with GNU Privacy Guard
+            <li>Highlight various forms of whitespace and indentation errors
+            <li>Support additional keys and key combinations in some terminals
+        </ul>
+
+        <p>Finally, these two additional plugins are not found in the above
+        collection:
+
+        <ul>
+            <li><a href="https://github.com/KevinGoodsell/vim-csexact">CSExact</a>
+            uses terminal escape codes to modify the terminal's color palette in
+            order to exactly mimic the colors used in the GUI version of Vim,
+            when using a color scheme that supports the GUI.
+            <li><a href="https://github.com/KevinGoodsell/vim-color-check">vim-color-check</a>
+            checks for common errors in Vim color schemes.
+        </ul>
+    </div>
+</div>
