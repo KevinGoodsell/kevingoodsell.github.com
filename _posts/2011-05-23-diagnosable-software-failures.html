@@ -94,7 +94,7 @@ been written to also report the excluded paths, but sadly it wasn't. It also
 doesn't offer much in the way of hooks to retrieve more information, but here's
 one way to list the paths that it failed to find:
 
-<pre class="code">
+{% highlight python %}
 #!/usr/bin/env python
 
 import site
@@ -116,7 +116,7 @@ try:
 finally:
     print "Possibly skipped paths:"
     print '\n'.join(missed_dirs)
-</pre>
+{% endhighlight %}
 
 <pre class="code">
 $ ./show-import-dirs
