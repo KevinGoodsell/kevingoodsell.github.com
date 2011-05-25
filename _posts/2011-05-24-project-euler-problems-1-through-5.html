@@ -23,24 +23,24 @@ some code samples for potential employers.
 <p>This is a rather trivial problem, so I'll skip any discussion of it and just
 present my solution.
 
-<pre class="code">
-#include &lt;iostream&gt;
+{% highlight c++ %}
+#include <iostream>
 
 int main()
 {
     int sum = 0;
 
-    for (int i=3; i&lt;1000; i++) {
+    for (int i=3; i<1000; i++) {
         if (i % 3 == 0 || i % 5 == 0) {
             sum += i;
         }
     }
 
-    std::cout &lt;&lt; sum &lt;&lt; std::endl;
+    std::cout << sum << std::endl;
 
     return 0;
 }
-</pre>
+{% endhighlight %}
 
 <h3>Problem 2: Summing Even Fibonacci Numbers</h3>
 
