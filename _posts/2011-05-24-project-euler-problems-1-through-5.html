@@ -56,15 +56,15 @@ four million, find the sum of the even-valued terms.
 
 <p>Like the previous one, this is too trivial for any discussion.
 
-<pre class="code">
-#include &lt;iostream&gt;
+{% highlight c++ %}
+#include <iostream>
 
 int main()
 {
     long sum = 0;
     long a = 1, b = 2;
 
-    while (b &lt; 4000000) {
+    while (b < 4000000) {
         if (b % 2 == 0) {
             sum += b;
         }
@@ -74,11 +74,11 @@ int main()
         b = temp;
     }
 
-    std::cout &lt;&lt; sum &lt;&lt; std::endl;
+    std::cout << sum << std::endl;
 
     return 0;
 }
-</pre>
+{% endhighlight %}
 
 <h3>Problem 3: Largest Prime Factor</h3>
 
@@ -99,20 +99,20 @@ outside the guaranteed range of a C++ long integer. Because of this, I used the
 <tt>long long</tt> type, which isn't standard in C++ yet (though it is widely
 supported).
 
-<pre class="code">
-#include &lt;iostream&gt;
+{% highlight c++ %}
+#include <iostream>
 
 // long long is not strict C++, unfortunately.
 
 bool is_prime(long long val)
 {
-    if (val &lt; 2) return false;
+    if (val < 2) return false;
     if (val == 2) return true;
     if (val % 2 == 0) return false;
 
     long long i = 3;
 
-    while (i * i &lt;= val) {
+    while (i * i <= val) {
         if (val % i == 0) {
             return false;
         }
@@ -128,19 +128,19 @@ int main() {
     long long i = 2;
     long long largest = 0;
 
-    while (i * i &lt;= val) {
-        if (is_prime(i) &amp;&amp; val % i == 0) {
+    while (i * i <= val) {
+        if (is_prime(i) && val % i == 0) {
             largest = i;
         }
 
         i++;
     }
 
-    std::cout &lt;&lt; largest &lt;&lt; std::endl;
+    std::cout << largest << std::endl;
 
     return 0;
 }
-</pre>
+{% endhighlight %}
 
 <h3>Problem 4: Largest Palindromic Number</h3>
 
@@ -159,14 +159,14 @@ factors. That is, the result I ended up with was <tt>995 * 583 = 580085</tt>,
 while the actual answer is <tt>993 * 913 = 906609</tt>. I think this is a
 somewhat understandable mistake, but certainly a type of error to watch out for.
 
-<pre class="code">
-#include &lt;iostream&gt;
-#include &lt;sstream&gt;
+{% highlight c++ %}
+#include <iostream>
+#include <sstream>
 
 bool is_palindrome(long val)
 {
     std::ostringstream sout;
-    sout &lt;&lt; val;
+    sout << val;
 
     std::string text(sout.str());
     std::string reversed(text.rbegin(), text.rend());
@@ -178,20 +178,20 @@ int main()
 {
     long max = 0;
 
-    for (int i=99; i&lt;1000; i++) {
-        for (int j=i; j&lt;1000; j++) {
+    for (int i=99; i<1000; i++) {
+        for (int j=i; j<1000; j++) {
             int val = i*j;
-            if (is_palindrome(val) &amp;&amp; val &gt; max) {
+            if (is_palindrome(val) && val > max) {
                 max = val;
             }
         }
     }
 
-    std::cout &lt;&lt; max &lt;&lt; std::endl;
+    std::cout << max << std::endl;
 
     return 0;
 }
-</pre>
+{% endhighlight %}
 
 <h3>Problem 5: Smallest Evenly Divisible Number</h3>
 
@@ -206,12 +206,12 @@ numbers from 1 to 20?
 <p>There's not much to say about this one. The simple optimization of adding 20
 on each iteration didn't occur to me immediately, like it probably should have.
 
-<pre class="code">
-#include &lt;iostream&gt;
+{% highlight c++ %}
+#include <iostream>
 
 bool is_divisible(long val)
 {
-    for (int i=2; i&lt;=20; i++) {
+    for (int i=2; i<=20; i++) {
         if (val % i != 0) return false;
     }
 
@@ -222,11 +222,11 @@ int main()
 {
     for (long i=20; ; i+=20) {
         if (is_divisible(i)) {
-            std::cout &lt;&lt; i &lt;&lt; std::endl;
+            std::cout << i << std::endl;
             break;
         }
     }
 
     return 0;
 }
-</pre>
+{% endhighlight %}

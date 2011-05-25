@@ -83,7 +83,7 @@ pre {
 	overflow: auto;
 }
 
-pre.code {
+pre.code, div.highlight pre {
 	background-color: #EEEEEE;
 	border: 2px solid #CCD8C0;
 	padding: 6px;
