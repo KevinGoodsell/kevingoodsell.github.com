@@ -1,0 +1,34 @@
+---
+layout: post
+title: Project Euler, Problems 11 Through... Lots
+textdate: Saturday, June 4, 2011
+categories: [project euler, cplusplus, code samples]
+---
+<p>My last few posts were about the solutions I've been writing for the problems
+from <a href="http://projecteuler.net/">Project Euler</a>. There are a lot of
+problems, and commentary on the individual solutions aren't all that
+interesting.
+
+<p>Therefore, instead of posting solutions here I've started pushing them to a
+<a href="https://github.com/KevinGoodsell/project-euler">GitHub repository</a>.
+At the time of writing, I've solved the first 45 problems.
+
+<p>A few of the problems offered on opportunity to use dynamic programming,
+which is a technique I haven't encountered much since leaving college. I was
+glad to have a chance to use it again, and refresh my memory. The result tends
+to be a very fast solution.
+
+<p>Some problems require very large integers, and in some cases I'm using the
+<tt>long long</tt> type which isn't officially part of C++. However, even this
+isn't big enough for some problems. In a few cases I "faked" arbitrary precision
+integers, then at problem 20 I started to implement a separate <tt>BigInt</tt>
+class, but only having the parts I needed for that problem. I quickly decided
+that it would be more useful to use a common arbitrary precision library, and
+switched to using <a href="http://gmplib.org/">GMP</a> for later problems that
+required very large integers. Reinventing the wheel isn't really the point of
+the problems, after all.
+
+<p>I eventually added a utility module for things that I've been using over and
+over again, such as a primality testing function. There are still many copies of
+this function in the earlier problems because I didn't bother to update them.
+Once I have the solution, I consider the program complete.
