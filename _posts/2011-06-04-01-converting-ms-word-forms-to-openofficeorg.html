@@ -1,0 +1,43 @@
+---
+layout: post
+title: Converting MS Word Forms to OpenOffice.org
+textdate: Saturday, June 4, 2011
+categories: [openoffice, free software]
+---
+<p>I was recently given a form to fill out that was in MS Word format. As a
+<a href="http://www.debian.org/">Debian</a> user I of course used
+<a href="http://www.openoffice.org/">OpenOffice.org</a> to open it (Debian's
+stable release doesn't have
+<a href="http://www.libreoffice.org/">LibreOffice</a>).
+
+<p>While I don't expect Word files to import perfectly into OpenOffice, I was
+flummoxed by the way the form fields were imported. Instead of editable fields,
+they were grayed-out sequences of space characters. These could be edited, but
+not very conveniently. I also couldn't find any way to convert them to the
+normal OpenOffice input fields. There was no indication that the application had
+any way of identifying or changing the field type.
+
+<p>Since <a href="http://en.wikipedia.org/wiki/OpenDocument">OpenDocument</a>
+files are just zip files with XML to define the document structure, it wasn't
+too hard to find the XML markup for the problem fields. The fields were
+identified with the tags <tt>&lt;field:fieldmark-start/&gt;</tt> and
+<tt>&lt;field:fieldmark-end/&gt;</tt>, and a few minutes on Google suggested
+that these are an extension specifically for MS Word compatibility.
+
+<p>Fortunately I found a (sort of) convenient way to convert these fields.
+First, I discovered that OpenOffice can save in a format that I didn't know
+about before: a flat XML version of OpenDocument. This makes editing or just
+viewing the XML much more convenient. It even produces nicely indented XML
+rather than the one huge line of text you get if you unzip an ODF file.
+
+<p>After converting to this format, all I had to do was open it in Vim and
+search for all the instances of the fieldmark tags replace them with the
+OpenDocument text-input tag,
+<tt>&lt;text:text-input text:description=""/&gt;</tt>.
+The description text corresponds to the field name, and the element text can be
+used to provide an initial value for the field.
+
+<p>The resulting file can be opened in OpenOffice and saved as a normal ODF.
+This could be a very handy tool for sticky OpenOffice/LibreOffice formatting
+issues, something that isn't too far removed from everyone's favorite feature
+from WordPerfect, Reveal Codes.
