@@ -381,20 +381,20 @@ pre.code, div.highlight pre {
 #sidebar li ul {
 	margin: 0px 0px;
 	border: none;
+	list-style-image: url(images/img07.jpg);
+	list-style-position: inside;
 }
 
 #sidebar li li {
 	margin: 0;
-	padding: 10px 0px;
+	padding: 10px 14px;
 	border: none;
 	background: url(images/img06.jpg) repeat-x left bottom;
 }
 
 #sidebar li li a {
-	padding: 0px 0px 0px 30px;
 	font-weight: normal;
 	border: none;
-	background: url(images/img07.jpg) no-repeat 15px 4px;
 }
 
 #sidebar li li a:hover {
