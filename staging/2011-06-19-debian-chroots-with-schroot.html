@@ -1,0 +1,271 @@
+---
+layout: post
+title: Debian Chroots With Schroot
+textdate: Sunday, June 19, 2011
+categories: [debian, chroot, free software]
+---
+<p><i>This post isn't quite ready yet. Needs a final read-through and edit, and
+a walkthrough of the techniques to make sure they work.</i>
+
+<p>One of my new favorite tools in Debian is schroot. schroot makes it easy to
+maintain and use chroot environments. If you are not familiar with
+<a href="http://en.wikipedia.org/wiki/Chroot">chroot</a> environments, they are
+essentially a complete OS installed in a directory which you can switch to using
+the chroot(2) system call. You can think of this as a basic form of
+operating system
+<a href="http://en.wikipedia.org/wiki/Operating_system-level_virtualization">
+virtualization</a>.
+
+<p>schroot allows you enter a chroot without requiring root credentials,
+automatically mounts important file systems inside the chroot, and allows you to
+create sessions from a chroot that function like an independent chroot that
+disappears when you are finished with it, leaving the source chroot in its
+original condition. You can install software, make configuration changes, create
+new users, run daemons, etc. and all of that will disappear when you terminate
+the session.
+
+<h2>Creating a chroot With debootstrap</h2>
+
+<p>To use schroot, you first need a chroot environment to use it with. The easy
+way to do this in Debian is with the debootstrap program, available in the
+package of the same name. debootstrap downloads and installs packages
+into a new directory to create an initial install that can be used as a
+chroot environment:
+
+{% highlight bash %}
+# debootstrap --include=locales,less,sudo,ncurses-term,vim sid sid-chroot
+{% endhighlight %}
+
+<p>This command installs a Debian Sid system in the directory
+sid-chroot, and includes a few additional packages. <tt>locales</tt> and
+<tt>less</tt> are probably good things to include in general, the rest
+are specific to how I work, and you may not need them.
+
+<p>It's possible to switch immediately to this chroot with the
+<tt>chroot</tt> command, but that's not as interesting or as useful as
+what we can do with schroot.
+
+<h2>Basic schroot Configuration and Use</h2>
+
+<p>To get started, we need an entry for our chroot in the schroot
+configuration file, <tt>/etc/schroot/schroot.conf</tt>:
+
+{% highlight text %}
+[sid-basic]
+description=Sid sample chroot
+type=directory
+directory=/home/kevin/test/chroots/sid-chroot
+union-type=aufs
+users=kevin
+source-users=kevin
+{% endhighlight %}
+
+<p>Note that <tt>kevin</tt> is my username and the directory is set to
+the full path to the chroot environment created with debootstrap.
+
+<p>With this configuration we can use schroot to enter the chroot
+environment:
+
+{% highlight bash %}
+$ schroot -c sid-basic
+{% endhighlight %}
+
+<p>There are a few things to note about this:
+<ol>
+  <li>Users specified in the <tt>users</tt> field of the configuration
+  file don't need to provide credentials to enter the chroot
+  environment.
+  <li>This type of chroot is "session managed", meaning that entering it
+  creates a new session that exists until you exit the chroot. Changes
+  made to the system within the session disappear when the session ends.
+  More on this later.
+  <li>While <em>some</em> changes in this chroot are transient, schroot
+  mounts parts of the host file system inside the chroot environment.
+  Changes here will affect the host file system, so be careful.
+</ul>
+
+<p>To get a better understanding of what is happening, exit the chroot
+environment (just use the <tt>exit</tt> command to end the shell process
+and return to the previous shell). Next, we'll start a named session.
+This only creates a session, it does not enter the session. You can
+enter and leave the session as needed, and the session will persist
+until it is explicitly ended. The commands to create and enter the
+session follow:
+
+{% highlight bash %}
+$ schroot --begin-session --session-name=test -c sid-basic
+$ schroot --run-session -c test
+{% endhighlight %}
+
+<p>Now, from a second terminal, run <tt>mount</tt> on the host system.
+In addition to the normal mounts you typically have on your system,
+you'll see several associated with this schroot session:
+
+{% highlight text %}
+/home/kevin/test/chroots/sid-chroot on /var/lib/schroot/union/underlay/test type none (rw,bind)
+test on /var/lib/schroot/mount/test type aufs (rw,br:/var/lib/schroot/union/overlay/test:/var/lib/schroot/union/underlay/test=ro)
+/proc on /var/lib/schroot/mount/test/proc type none (rw,bind)
+/sys on /var/lib/schroot/mount/test/sys type none (rw,bind)
+/dev on /var/lib/schroot/mount/test/dev type none (rw,bind)
+/home on /var/lib/schroot/mount/test/home type none (rw,bind)
+/tmp on /var/lib/schroot/mount/test/tmp type none (rw,bind)
+
+{% endhighlight %}
+
+<p>The first two mounts create a union file system for the root file
+system of the chroot. The "underlay" portion is the base chroot
+directory, and it is mounted as a read-only layer. The "overlay" on top
+of that is writable, but is deleted when the session ends.
+
+<p>The remaining mounts add common file systems to the chroot
+environment&mdash;<tt>/proc</tt>, <tt>/sys</tt>, <tt>/dev</tt>,
+<tt>/home</tt>, and <tt>/tmp</tt>. Mounting <tt>/home</tt> is
+convenient, but has some undesirable consequences. The first is that it
+makes experimenting in the chroot environment rather dangerous, since
+you can destroy your files. The second is that creating new users in the
+chroot environment will create home directories that persist after the
+session is ended. I'll discuss the first concern later. To deal with the
+second concern while still having the convenience of being able to
+access my files, I like to mount <tt>/home/kevin</tt> in the chroot
+instead of mounting all of <tt>/home</tt>. The next section explains how
+to further customize a chroot to accomplish things like this.
+
+<h2>Custom schroot Configurations</h2>
+
+<p>schroot has a stock set of configuration types located in directories
+in the <tt>/etc/schroot</tt> directory: default, desktop, minimal, and
+sbuild. You can create your own configurations based on these. To start
+with, copy the <tt>default</tt> directory to a new directory called
+<tt>custom</tt>. Edit the file <tt>custom/config</tt> and change the
+paths to refer to the files in the <tt>custom</tt> directory:
+
+{% highlight text %}
+# Filesystems to mount inside the chroot.
+FSTAB="/etc/schroot/custom/fstab"
+
+# Files to copy from the host system into the chroot.
+COPYFILES="/etc/schroot/custom/copyfiles"
+
+# System NSS databases to copy into the chroot.
+NSSDATABASES="/etc/schroot/custom/nssdatabases"
+{% endhighlight %}
+
+<p>Next, edit the <tt>custom/copyfiles</tt> file. This is a list of
+files that are copied from the host system to the chroot system. By
+default this includes only <tt>/etc/resolv.conf</tt> and
+<tt>/etc/gshadow</tt>. I like to add <tt>/etc/sudoers</tt> since I use
+sudo rather than the root account. I also prefer to remove
+<tt>/etc/resolv.conf</tt>, because I think a static file in the chroot
+is more useful. For example, if I start a session on my laptop while
+connected to some coffee shop wifi network, the DNS servers provided may
+not be useful on any other network.
+
+<p>Now edit the <tt>fstab</tt> file. The main change I typically make
+here is to replace the <tt>/home</tt> mount with a <tt>/home/kevin</tt>
+mount. The first two fields should both be changed. This allows access
+to my files inside the chroot while also allowing me to create new users
+with their own home directories which will not persist beyond the end of
+the session. This wouldn't work so well if the chroot was configured for
+use by multiple users.
+
+<p>I'm skipping the <tt>nssdatabases</tt> file because I don't typically
+find any reason to make changes there. You may want to, however.
+
+<p>To make use of the custom configuration, make sure you've ended any
+schroot sessions and edit the entry in
+<tt>/etc/schroot/schroot.conf</tt> adding this line:
+
+{% highlight text %}
+script-config=custom/config
+{% endhighlight %}
+
+<h2>Managing Source Chroots</h2>
+
+<p>Chroots with a <tt>union-type</tt> setting fall into a category known
+as <em>source chroots</em>. Source chroots are used as sessions, where
+changes made within the session only last as long as the session is
+active. In other words, they have a <em>source</em> which is used to
+generate the session, but which is not modified by using the session.
+
+<p>Source chroots provide an additional chroot with a name constructed
+by appending <tt>-source</tt> to the end of the original name, and which
+is accessible by users listed in the <tt>source-users</tt> setting.
+Changes made in this chroot are persistent, effecting all future
+sessions.
+
+<p>As a simple example of modifying a source chroot, lets look at a
+problem you are likely to encounter using chroots. If you have a
+terminal that uses UTF-8 (as many do today), you might have
+<tt>LANG=en_US.UTF-8</tt> (for example) in your environment. In a new
+chroot, this will produce some problems. When running <tt>man</tt>, you
+may see this error:
+
+{% highlight text %}
+man: can't set the locale; make sure $LC_* and $LANG are correct
+{% endhighlight %}
+
+<p>Many other commands will produce similar errors. This is because the
+system locales are not configured. This is easy to fix, but if you fix
+it in a session you'll just need to fix it again in the next session.
+Instead, go to the chroot's source and make the changes there:
+
+{% highlight bash %}
+$ schroot -c sid-basic-source
+{% endhighlight %}
+
+Edit <tt>/etc/locale.gen</tt>, uncomment the locales you might actually
+use, save and quit, then run <tt>locale-gen</tt>. Now you can leave the
+chroot and the changes will persist into your future sessions.
+
+<p>By using the chroot's source you can install software you always want
+to have available in your sessions, update installed packages, etc.
+
+<h2>Another Custom Configuration</h2>
+
+<p>One advantage of working in a chroot environment is that you can
+protect files on the host system from accidental modification or
+deletion. However, as mentioned earlier, the configurations we've looked
+at so for mount users' home directories inside the chroot, negating
+some of these benefits. This is a matter of convenience versus security,
+and the right way to go depends on what you are trying to accomplish. By
+using another schroot configuration, we can support both arrangements.
+This new configuration will use a home folder that exists inside the
+chroot rather than the host system, and furthermore will allow running X
+applications using the host's display.
+
+<p>To begin with, in <tt>/etc/schroot/</tt> copy the directory
+<tt>desktop</tt> to a new directory named <tt>nohome</tt>. Starting with
+the desktop configuration makes it easier to get X applications working.
+The changes that need to be made to the new configuration are similar to
+what was done previously. Fix up the paths in <tt>nohome/config</tt>,
+make any desired changes in <tt>nohome/copyfiles</tt> and
+<tt>nohome/nssdatabases</tt>. In <tt>nohome/fstab</tt>, delete the
+<tt>/home</tt> line. If you use gdm3, uncomment the line to mount
+<tt>/var/run/gdm3</tt>. Sid seems to put this in a different location,
+so I also had to change the mount point to <tt>/run/gdm3</tt>.
+
+<p>Now in <tt>/etc/schroot/schroot.conf</tt> add a section to create a
+new chroot using this configuration:
+
+{% highlight text %}
+[sid-nohome]
+description=Sid with /home not mounted
+type=directory
+directory=/home/kevin/test/chroots/sid-chroot
+union-type=aufs
+users=kevin
+source-users=kevin
+script-config=nohome/config
+preserve-environment=true
+{% endhighlight %}
+
+<p>This is just like the sid-basic chroot, but using the nohome
+configuration and including a new setting,
+<tt>preserve-environment=true</tt>. This setting imports environment
+variables from the host to the chroot, including things like <tt>DISPLAY</tt>
+and <tt>XAUTHORITY</tt> that allow X applications to access the display.
+
+<p>If you don't use gdm3, you will probably need an alternative strategy
+to get your Xauthority file into the chroot environment. One option that
+seems to work is to add <tt>/home/&lt;user&gt;/.Xauthority</tt> to
+<tt>/etc/schroot/nohome/copyfiles</tt>.
