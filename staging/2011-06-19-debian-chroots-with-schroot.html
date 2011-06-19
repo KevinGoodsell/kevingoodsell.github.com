@@ -10,8 +10,8 @@ a walkthrough of the techniques to make sure they work.</i>
 <p>One of my new favorite tools in Debian is schroot. schroot makes it easy to
 maintain and use chroot environments. If you are not familiar with
 <a href="http://en.wikipedia.org/wiki/Chroot">chroot</a> environments, they are
-essentially a complete OS installed in a directory which you can switch to using
-the chroot(2) system call. You can think of this as a basic form of
+essentially a complete system installed in a directory which you can switch to
+using the chroot(2) system call. You can think of this as a basic form of
 operating system
 <a href="http://en.wikipedia.org/wiki/Operating_system-level_virtualization">
 virtualization</a>.
@@ -62,6 +62,7 @@ source-users=kevin
 
 <p>Note that <tt>kevin</tt> is my username and the directory is set to
 the full path to the chroot environment created with debootstrap.
+Replace these with something appropriate.
 
 <p>With this configuration we can use schroot to enter the chroot
 environment:
@@ -151,14 +152,14 @@ NSSDATABASES="/etc/schroot/custom/nssdatabases"
 {% endhighlight %}
 
 <p>Next, edit the <tt>custom/copyfiles</tt> file. This is a list of
-files that are copied from the host system to the chroot system. By
-default this includes only <tt>/etc/resolv.conf</tt> and
-<tt>/etc/gshadow</tt>. I like to add <tt>/etc/sudoers</tt> since I use
-sudo rather than the root account. I also prefer to remove
-<tt>/etc/resolv.conf</tt>, because I think a static file in the chroot
-is more useful. For example, if I start a session on my laptop while
-connected to some coffee shop wifi network, the DNS servers provided may
-not be useful on any other network.
+files that are copied from the host system to the chroot system each
+time a new session is started. By default this includes only
+<tt>/etc/resolv.conf</tt> and <tt>/etc/gshadow</tt>. I like to add
+<tt>/etc/sudoers</tt> since I use sudo rather than the root account. I
+also prefer to remove <tt>/etc/resolv.conf</tt>, because I think a
+static file in the chroot is more useful. For example, if I start a
+session on my laptop while connected to some coffee shop wifi network,
+the DNS servers provided may not be useful on any other network.
 
 <p>Now edit the <tt>fstab</tt> file. The main change I typically make
 here is to replace the <tt>/home</tt> mount with a <tt>/home/kevin</tt>
@@ -237,8 +238,8 @@ applications using the host's display.
 <tt>desktop</tt> to a new directory named <tt>nohome</tt>. Starting with
 the desktop configuration makes it easier to get X applications working.
 The changes that need to be made to the new configuration are similar to
-what was done previously. Fix up the paths in <tt>nohome/config</tt>,
-make any desired changes in <tt>nohome/copyfiles</tt> and
+what was done previously. Fix up the paths in <tt>nohome/config</tt>
+and make any desired changes in <tt>nohome/copyfiles</tt> and
 <tt>nohome/nssdatabases</tt>. In <tt>nohome/fstab</tt>, delete the
 <tt>/home</tt> line. If you use gdm3, uncomment the line to mount
 <tt>/var/run/gdm3</tt>. Sid seems to put this in a different location,
@@ -269,3 +270,8 @@ and <tt>XAUTHORITY</tt> that allow X applications to access the display.
 to get your Xauthority file into the chroot environment. One option that
 seems to work is to add <tt>/home/&lt;user&gt;/.Xauthority</tt> to
 <tt>/etc/schroot/nohome/copyfiles</tt>.
+
+<p>Once this is set up, you will probably want to enter the source chroot and
+create your home directory there. You may want to add some base files that will
+be available in any session using the chroot, such as shell initialization
+files.
