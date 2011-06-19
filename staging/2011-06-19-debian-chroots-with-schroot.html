@@ -32,7 +32,7 @@ package of the same name. debootstrap downloads and installs packages
 into a new directory to create an initial install that can be used as a
 chroot environment:
 
-{% highlight bash %}
+{% highlight text %}
 # debootstrap --include=locales,less,sudo,ncurses-term,vim sid sid-chroot
 {% endhighlight %}
 
@@ -66,7 +66,7 @@ the full path to the chroot environment created with debootstrap.
 <p>With this configuration we can use schroot to enter the chroot
 environment:
 
-{% highlight bash %}
+{% highlight text %}
 $ schroot -c sid-basic
 {% endhighlight %}
 
@@ -82,7 +82,7 @@ $ schroot -c sid-basic
   <li>While <em>some</em> changes in this chroot are transient, schroot
   mounts parts of the host file system inside the chroot environment.
   Changes here will affect the host file system, so be careful.
-</ul>
+</ol>
 
 <p>To get a better understanding of what is happening, exit the chroot
 environment (just use the <tt>exit</tt> command to end the shell process
@@ -92,7 +92,7 @@ enter and leave the session as needed, and the session will persist
 until it is explicitly ended. The commands to create and enter the
 session follow:
 
-{% highlight bash %}
+{% highlight text %}
 $ schroot --begin-session --session-name=test -c sid-basic
 $ schroot --run-session -c test
 {% endhighlight %}
@@ -209,7 +209,7 @@ system locales are not configured. This is easy to fix, but if you fix
 it in a session you'll just need to fix it again in the next session.
 Instead, go to the chroot's source and make the changes there:
 
-{% highlight bash %}
+{% highlight text %}
 $ schroot -c sid-basic-source
 {% endhighlight %}
 
