@@ -24,7 +24,7 @@ original condition. You can install software, make configuration changes, create
 new users, run daemons, etc. and all of that will disappear when you terminate
 the session.
 
-<h2>Creating a chroot With debootstrap</h2>
+<h3>Creating a chroot With debootstrap</h3>
 
 <p>To use schroot, you first need a chroot environment to use it with. The easy
 way to do this in Debian is with the debootstrap program, available in the
@@ -45,7 +45,7 @@ are specific to how I work, and you may not need them.
 <tt>chroot</tt> command, but that's not as interesting or as useful as
 what we can do with schroot.
 
-<h2>Basic schroot Configuration and Use</h2>
+<h3>Basic schroot Configuration and Use</h3>
 
 <p>To get started, we need an entry for our chroot in the schroot
 configuration file, <tt>/etc/schroot/schroot.conf</tt>:
@@ -130,7 +130,7 @@ access my files, I like to mount <tt>/home/kevin</tt> in the chroot
 instead of mounting all of <tt>/home</tt>. The next section explains how
 to further customize a chroot to accomplish things like this.
 
-<h2>Custom schroot Configurations</h2>
+<h3>Custom schroot Configurations</h3>
 
 <p>schroot has a stock set of configuration types located in directories
 in the <tt>/etc/schroot</tt> directory: default, desktop, minimal, and
@@ -179,7 +179,7 @@ schroot sessions and edit the entry in
 script-config=custom/config
 {% endhighlight %}
 
-<h2>Managing Source Chroots</h2>
+<h3>Managing Source Chroots</h3>
 
 <p>Chroots with a <tt>union-type</tt> setting fall into a category known
 as <em>source chroots</em>. Source chroots are used as sessions, where
@@ -213,14 +213,14 @@ Instead, go to the chroot's source and make the changes there:
 $ schroot -c sid-basic-source
 {% endhighlight %}
 
-Edit <tt>/etc/locale.gen</tt>, uncomment the locales you might actually
+<p>Edit <tt>/etc/locale.gen</tt>, uncomment the locales you might actually
 use, save and quit, then run <tt>locale-gen</tt>. Now you can leave the
 chroot and the changes will persist into your future sessions.
 
 <p>By using the chroot's source you can install software you always want
 to have available in your sessions, update installed packages, etc.
 
-<h2>Another Custom Configuration</h2>
+<h3>Another Custom Configuration</h3>
 
 <p>One advantage of working in a chroot environment is that you can
 protect files on the host system from accidental modification or
