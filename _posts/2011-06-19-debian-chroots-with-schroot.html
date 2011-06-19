@@ -88,10 +88,9 @@ $ schroot -c sid-basic
 <p>To get a better understanding of what is happening, exit the chroot
 environment (just use the <tt>exit</tt> command to end the shell process
 and return to the previous shell). Next, we'll start a named session.
-This only creates a session, it does not enter the session. You can
-enter and leave the session as needed, and the session will persist
-until it is explicitly ended. The commands to create and enter the
-session follow:
+You can enter and leave the session as needed, and the session will
+persist until it is explicitly ended. The commands to create and enter
+the session follow:
 
 {% highlight text %}
 $ schroot --begin-session --session-name=test -c sid-basic
@@ -130,6 +129,13 @@ second concern while still having the convenience of being able to
 access my files, I like to mount <tt>/home/kevin</tt> in the chroot
 instead of mounting all of <tt>/home</tt>. The next section explains how
 to further customize a chroot to accomplish things like this.
+
+<p>When you are finished with a named session, you can end it with a
+command like this:
+
+{% highlight text %}
+$ schroot --end-session -c test
+{% endhighlight %}
 
 <h3>Custom schroot Configurations</h3>
 
@@ -191,7 +197,7 @@ generate the session, but which is not modified by using the session.
 <p>Source chroots provide an additional chroot with a name constructed
 by appending <tt>-source</tt> to the end of the original name, and which
 is accessible by users listed in the <tt>source-users</tt> setting.
-Changes made in this chroot are persistent, effecting all future
+Changes made in this chroot are persistent, affecting all future
 sessions.
 
 <p>As a simple example of modifying a source chroot, lets look at a
@@ -226,13 +232,13 @@ to have available in your sessions, update installed packages, etc.
 <p>One advantage of working in a chroot environment is that you can
 protect files on the host system from accidental modification or
 deletion. However, as mentioned earlier, the configurations we've looked
-at so for mount users' home directories inside the chroot, negating
+at so far mount users' home directories inside the chroot, negating
 some of these benefits. This is a matter of convenience versus security,
 and the right way to go depends on what you are trying to accomplish. By
-using another schroot configuration, we can support both arrangements.
+using a second schroot configuration, we can support both arrangements.
 This new configuration will use a home folder that exists inside the
-chroot rather than the host system, and furthermore will allow running X
-applications using the host's display.
+chroot rather than on the host system, and furthermore will allow
+running X applications using the host's display.
 
 <p>To begin with, in <tt>/etc/schroot/</tt> copy the directory
 <tt>desktop</tt> to a new directory named <tt>nohome</tt>. Starting with
